@@ -52,10 +52,21 @@ class ConversionViewController : UIViewController, UITextFieldDelegate {
         shouldChangeCharactersInRange range: NSRange,
         replacementString string: String) -> Bool {
             
+            /*------Bronze Assignment Part 1-----*/
+            //Checks whether the number to be replaced has only digits
+            let TextHasOnlyDigits = string.rangeOfCharacterFromSet(NSCharacterSet.letterCharacterSet())
+            print(TextHasOnlyDigits)
+            /*------Bronze Assignment Part 1 Completed-----*/
+            
             let existingTextHasDecimalSeperator = textField.text?.rangeOfString(".")
             let replacementTextHasDecimalSeperator = string.rangeOfString(".")
             
-            if existingTextHasDecimalSeperator != nil && replacementTextHasDecimalSeperator != nil {
+            /*------Bronze Assignment Part 2----*/
+            if TextHasOnlyDigits != nil {
+                return false
+            }
+            /*------Bronze Assignment Part 2 Completed----*/
+            else if existingTextHasDecimalSeperator != nil && replacementTextHasDecimalSeperator != nil {
                 return false
             }
             else
