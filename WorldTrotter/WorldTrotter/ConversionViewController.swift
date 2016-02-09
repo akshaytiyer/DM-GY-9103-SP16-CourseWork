@@ -54,15 +54,15 @@ class ConversionViewController : UIViewController, UITextFieldDelegate {
             
             /*------Bronze Assignment Part 1-----*/
             //Checks whether the number to be replaced has only digits
-            let TextHasOnlyDigits = string.rangeOfCharacterFromSet(NSCharacterSet.letterCharacterSet())
-            print(TextHasOnlyDigits)
+            let TextHasLetters = string.rangeOfCharacterFromSet(NSCharacterSet.letterCharacterSet())
+            print(TextHasLetters)
             /*------Bronze Assignment Part 1 Completed-----*/
             
             let existingTextHasDecimalSeperator = textField.text?.rangeOfString(".")
             let replacementTextHasDecimalSeperator = string.rangeOfString(".")
             
             /*------Bronze Assignment Part 2----*/
-            if TextHasOnlyDigits != nil {
+            if TextHasLetters != nil {
                 return false
             }
             /*------Bronze Assignment Part 2 Completed----*/
