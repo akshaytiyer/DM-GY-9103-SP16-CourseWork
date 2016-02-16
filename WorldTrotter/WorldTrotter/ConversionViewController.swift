@@ -10,10 +10,36 @@ import UIKit
 
 class ConversionViewController : UIViewController, UITextFieldDelegate {
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         print("ConversionViewController loaded its view.")
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        var hour: Int?
+        hour = NSCalendar.currentCalendar().component(.Hour, fromDate: NSDate())
+        print(hour)
+        // Start color off with a default value
+        var color = UIColor.grayColor()
+        
+        if let time = hour {
+            print("I am Inside")
+            switch time {
+            case 1...8: color = UIColor.redColor()
+            case 9...12: color = UIColor.greenColor()
+            case 13...18: color = UIColor.blueColor()
+                        print("reached here")
+            case 19...24: color = UIColor.blackColor()
+            default: break
+            }
+        }
+        
+        view.backgroundColor = color
     }
     
     let numberFormatter: NSNumberFormatter = {
