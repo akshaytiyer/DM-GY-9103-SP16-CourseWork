@@ -1,9 +1,5 @@
 //
-//  AppDelegate.swift
-//  Quiz
-//
-//  Created by Akshay Iyer on 2/1/16.
-//  Copyright © 2016 akshaytiyer. All rights reserved.
+//  Copyright © 2015 Big Nerd Ranch
 //
 
 import UIKit
