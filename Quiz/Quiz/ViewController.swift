@@ -67,8 +67,10 @@ class ViewController: UIViewController {
         self.currentQuestionLabelCenterXConstraint.constant += screenWidth
         
         //Animate the alpha
-        UIView.animateWithDuration(0.5,
-            delay: 0,
+        UIView.animateWithDuration(0.8,
+            delay: 0.2,
+            usingSpringWithDamping: 0.5,
+            initialSpringVelocity: 0.0,
             options:  [.CurveLinear],
             animations: {
                 self.currentQuestionLabel.alpha = 0
