@@ -14,6 +14,7 @@
 		5E0D5E9F1C7CD01800B08FAF /* ItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D5E9E1C7CD01800B08FAF /* ItemsViewController.swift */; };
 		5E0D5EA11C7CD13200B08FAF /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D5EA01C7CD13200B08FAF /* Item.swift */; };
 		5E0D5EA31C7CD4AD00B08FAF /* ItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D5EA21C7CD4AD00B08FAF /* ItemStore.swift */; };
+		5E1A66051C83EF250096AA75 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1A66041C83EF250096AA75 /* ItemCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		5E0D5E9E1C7CD01800B08FAF /* ItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemsViewController.swift; sourceTree = "<group>"; };
 		5E0D5EA01C7CD13200B08FAF /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5E0D5EA21C7CD4AD00B08FAF /* ItemStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemStore.swift; sourceTree = "<group>"; };
+		5E1A66041C83EF250096AA75 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				5E0D5E981C7CCEF900B08FAF /* Info.plist */,
 				5E0D5E9E1C7CD01800B08FAF /* ItemsViewController.swift */,
 				5E0D5EA01C7CD13200B08FAF /* Item.swift */,
+				5E1A66041C83EF250096AA75 /* ItemCell.swift */,
 			);
 			path = Homepwner;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 				5E0D5EA11C7CD13200B08FAF /* Item.swift in Sources */,
 				5E0D5EA31C7CD4AD00B08FAF /* ItemStore.swift in Sources */,
 				5E0D5E8D1C7CCEF900B08FAF /* AppDelegate.swift in Sources */,
+				5E1A66051C83EF250096AA75 /* ItemCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,6 +297,7 @@
 				5E0D5E9D1C7CCEF900B08FAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
