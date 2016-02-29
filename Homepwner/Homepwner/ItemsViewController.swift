@@ -10,36 +10,43 @@ import UIKit
 
 class ItemsViewController: UITableViewController {
     var itemStore: ItemStore!
-    var less50 = [Item]()
-    var more50 = [Item]()
-    var splitItems = [[Item]]()
+    
+    @IBAction func addNewItem(sender: AnyObject) {
+        //Create a new item and add it to the store
+        let newItem = itemStore.createItem()
+        
+        if let index = itemStore.allItems.indexOf(newItem) {
+            let indexPath = NSIndexPath(forRow: index, inSection: 0)
+            
+            //Insert this new row into the table
+            tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        }
+
+        }
+    
+    @IBAction func toggleEditingMode(sender: AnyObject) {
+        //If your are currently in the editing mode
+        if editing {
+            //Change text of button to inform user of state
+            sender.setTitle("Edit", forState: .Normal)
+            
+            //Turn off editing mode
+            setEditing(false, animated: true)
+        }
+        else
+        {
+            //Change text of button to inform user of state
+            sender.setTitle("Done", forState: .Normal)
+            
+            //Enter editing mode
+            setEditing(true, animated: true)
+        }
+
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.backgroundView = UIImageView(image: UIImage(named: "background.jpg"))
-        let lastLineItem = Item(random: false)
-        itemStore.allItems.append(lastLineItem)
-        print(itemStore.allItems.count)
         
-        for i in 0...itemStore.allItems.count-2
-        {
-            if itemStore.allItems[i].valueInDollars < 50
-            {
-                less50.append(itemStore.allItems[i])
-                print(itemStore.allItems[i].name)
-            }
-            else
-            {
-                more50.append(itemStore.allItems[i])
-                print(itemStore.allItems[i].name)
-            }
-        }
-
-        less50.append(itemStore.allItems[itemStore.allItems.count-1])
-        splitItems.append(less50)
-        more50.append(itemStore.allItems[itemStore.allItems.count-1])
-        splitItems.append(more50)
-
         let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.height
         
         let insets = UIEdgeInsets(top: statusBarHeight, left: 0, bottom: 0, right: 0)
@@ -47,31 +54,41 @@ class ItemsViewController: UITableViewController {
         tableView.scrollIndicatorInsets = insets
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        //update the model
+        itemStore.moveItemsAtIndex(sourceIndexPath.item, toIndex: destinationIndexPath.row)
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let islastline = splitItems[indexPath.section][indexPath.row]
-        if islastline.name == "No More Items to Display" {
-            return 44
-        }else {
-            return 60
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        //If the table view is asking to commit a delete command
+        if editingStyle == .Delete {
+            let item = itemStore.allItems[indexPath.row]
+            
+            let title  = "Delete \(item.name)"
+            let message  = "Are you sure you want to delete this item?"
+            
+            let ac = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+            ac.addAction(cancelAction)
+            
+            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: { (action) -> Void in
+                //Remove the item from the store
+                self.itemStore.removeItem(item)
+                
+                //Also remove that row from the table with an animation
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            })
+            ac.addAction(deleteAction)
+            
+            //Present the alert controller
+            presentViewController(ac, animated: true, completion: nil)
+            
         }
-    }
-
-    let headerTitles = ["Less Than 50", "More Than 50"]
-    
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section < headerTitles.count {
-            return headerTitles[section]
-        }
-        
-        return nil
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return splitItems[section].count
+        return itemStore.allItems.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -82,26 +99,11 @@ class ItemsViewController: UITableViewController {
         //That is the nth index of items, where n = row this cell
         //Will appear on the tableview
         
-        let item = splitItems[indexPath.section][indexPath.row]
+        let item = itemStore.allItems[indexPath.row]
         
-
         cell.textLabel?.text = item.name
-        if item.name == "No More Items to Display" {
-            cell.textLabel?.font = UIFont(name: "Arial", size: 10)
-        }else {
-            cell.textLabel?.font = UIFont(name: "Arial", size: 20)
-        }
-        
-        
-        if item.name == "No More Items to Display"
-        {
-        cell.detailTextLabel?.text = ""
-        }
-        else
-        {
         cell.detailTextLabel?.text = "$\(item.valueInDollars)"
-        }
-        cell.backgroundColor = UIColor.clearColor()
+
         return cell
     }
 }

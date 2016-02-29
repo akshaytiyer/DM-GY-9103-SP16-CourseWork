@@ -43,7 +43,7 @@ class Item: NSObject
         }
         else
         {
-            self.init(name: "No More Items to Display", serialNumber: nil, valueInDollars: 0)
+            self.init(name: "", serialNumber: nil, valueInDollars: 0)
         }
     }
 }
