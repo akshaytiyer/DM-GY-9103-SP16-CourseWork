@@ -14,15 +14,12 @@ class ItemsViewController: UITableViewController {
     @IBAction func addNewItem(sender: AnyObject) {
         //Create a new item and add it to the store
         let newItem = itemStore.createItem()
-        
         if let index = itemStore.allItems.indexOf(newItem) {
             let indexPath = NSIndexPath(forRow: index, inSection: 0)
-            
             //Insert this new row into the table
             tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
         }
-
-        }
+    }
     
     @IBAction func toggleEditingMode(sender: AnyObject) {
         //If your are currently in the editing mode
@@ -63,20 +60,24 @@ class ItemsViewController: UITableViewController {
         itemStore.moveItemsAtIndex(sourceIndexPath.item, toIndex: destinationIndexPath.row)
     }
     
+    override func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String? {
+        return "Remove"
+    }
+    
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         //If the table view is asking to commit a delete command
         if editingStyle == .Delete {
             let item = itemStore.allItems[indexPath.row]
             
-            let title  = "Delete \(item.name)"
-            let message  = "Are you sure you want to delete this item?"
+            let title  = "Remove \(item.name)"
+            let message  = "Are you sure you want to remove this item?"
             
             let ac = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
             
             let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
             ac.addAction(cancelAction)
             
-            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: { (action) -> Void in
+            let deleteAction = UIAlertAction(title: "Remove", style: .Destructive, handler: { (action) -> Void in
                 //Remove the item from the store
                 self.itemStore.removeItem(item)
                 
@@ -91,8 +92,24 @@ class ItemsViewController: UITableViewController {
         }
     }
     
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    {
+        return !(indexPath.row == itemStore.allItems.count)
+    }
+    
+    override func tableView(tableView: UITableView, targetIndexPathForMoveFromRowAtIndexPath sourceIndexPath: NSIndexPath, toProposedIndexPath proposedDestinationIndexPath: NSIndexPath) -> NSIndexPath {
+        if proposedDestinationIndexPath.row == itemStore.allItems.count
+        {
+            return NSIndexPath(forRow: proposedDestinationIndexPath.row - 1,  inSection: 0)
+        }
+        else
+        {
+            return proposedDestinationIndexPath
+        }
+    }
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemStore.allItems.count
+        return itemStore.allItems.count + 1
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -105,13 +122,19 @@ class ItemsViewController: UITableViewController {
         //Set the text on the cell with description of the item
         //That is the nth index of items, where n = row this cell
         //Will appear on the tableview
-        
-        let item = itemStore.allItems[indexPath.row]
-        
-        cell.nameLabel.text = item.name
-        cell.serialNumberLabel.text = item.serialNumber
-        cell.valueLabel.text = "$\(item.valueInDollars)"
-
+        if indexPath.row < itemStore.allItems.count
+        {
+            let item = itemStore.allItems[indexPath.row]
+            cell.nameLabel.text = item.name
+            cell.serialNumberLabel.text = item.serialNumber
+            cell.valueLabel.text = "$\(item.valueInDollars)"
+        }
+        else
+        {
+            cell.nameLabel.text = "No More Items"
+            cell.serialNumberLabel.text = ""
+            cell.valueLabel.text = ""
+        }
         return cell
     }
 }
