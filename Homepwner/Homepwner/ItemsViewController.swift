@@ -41,6 +41,25 @@ class ItemsViewController: UITableViewController {
 
     }
     
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row < itemStore.allItems.count
+        {
+        let item = itemStore.allItems[indexPath.row]
+        if item.valueInDollars > 50
+        {
+            cell.backgroundColor = UIColor.redColor()
+        }
+        else
+        {
+            cell.backgroundColor = UIColor.greenColor()
+        }
+        }
+        else
+        {
+            cell.backgroundColor = UIColor.clearColor()
+        }
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
