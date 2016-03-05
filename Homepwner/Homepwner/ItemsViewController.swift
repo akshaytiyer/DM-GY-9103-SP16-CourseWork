@@ -131,6 +131,28 @@ class ItemsViewController: UITableViewController {
         return itemStore.allItems.count + 1
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        //If the triggered segue is the "ShowItem" 
+        if segue.identifier == "ShowItem" {
+            
+            //Figure out which row was tapped
+            if let row = tableView.indexPathForSelectedRow?.row {
+                
+                //Get the item associated with this row and pass it along
+                let item = itemStore.allItems[row]
+                let detailViewController
+                        = segue.destinationViewController as! DetailViewController
+                detailViewController.item = item
+            }
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //Create an instance of UITableViewCell, with default appearence
         let cell = tableView.dequeueReusableCellWithIdentifier("ItemCell", forIndexPath: indexPath) as! ItemCell
