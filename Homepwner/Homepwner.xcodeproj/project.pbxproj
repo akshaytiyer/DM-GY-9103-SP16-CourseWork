@@ -15,6 +15,7 @@
 		5E0D5EA11C7CD13200B08FAF /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D5EA01C7CD13200B08FAF /* Item.swift */; };
 		5E0D5EA31C7CD4AD00B08FAF /* ItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0D5EA21C7CD4AD00B08FAF /* ItemStore.swift */; };
 		5E1A66051C83EF250096AA75 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1A66041C83EF250096AA75 /* ItemCell.swift */; };
+		5E5CAF0B1C8BD41B00E4D2F8 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CAF0A1C8BD41B00E4D2F8 /* CustomTextField.swift */; };
 		5E64F7191C8B713400CA76A0 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E64F7181C8B713400CA76A0 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		5E0D5EA01C7CD13200B08FAF /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5E0D5EA21C7CD4AD00B08FAF /* ItemStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemStore.swift; sourceTree = "<group>"; };
 		5E1A66041C83EF250096AA75 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
+		5E5CAF0A1C8BD41B00E4D2F8 /* CustomTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		5E64F7181C8B713400CA76A0 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +74,7 @@
 				5E0D5EA01C7CD13200B08FAF /* Item.swift */,
 				5E1A66041C83EF250096AA75 /* ItemCell.swift */,
 				5E64F7181C8B713400CA76A0 /* DetailViewController.swift */,
+				5E5CAF0A1C8BD41B00E4D2F8 /* CustomTextField.swift */,
 			);
 			path = Homepwner;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E5CAF0B1C8BD41B00E4D2F8 /* CustomTextField.swift in Sources */,
 				5E0D5E9F1C7CD01800B08FAF /* ItemsViewController.swift in Sources */,
 				5E0D5EA11C7CD13200B08FAF /* Item.swift in Sources */,
 				5E0D5EA31C7CD4AD00B08FAF /* ItemStore.swift in Sources */,

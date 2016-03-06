@@ -11,10 +11,12 @@ import UIKit
 class DetailViewController: UIViewController, UITextFieldDelegate {
     
 
-    @IBOutlet var nameField: UITextField!
-    @IBOutlet var serialNumberField: UITextField!
-    @IBOutlet var valueField: UITextField!
+    @IBOutlet var nameField: CustomTextField!
+    @IBOutlet var serialNumberField: CustomTextField!
+    @IBOutlet var valueField: CustomTextField!
     @IBOutlet var dateLabel: UILabel!
+    
+    
 
     var item: Item! {
         didSet {
