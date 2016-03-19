@@ -8,7 +8,10 @@
 
 import UIKit
 
-class DetailViewController: UIViewController, UITextFieldDelegate {
+class DetailViewController: UIViewController, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    
+    @IBOutlet var imageView: UIImageView!
     
 
     @IBOutlet var nameField: CustomTextField!
@@ -16,13 +19,53 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var valueField: CustomTextField!
     @IBOutlet var dateLabel: UILabel!
     
-    
 
+    var changeDate: ChangeDate!
     var item: Item! {
         didSet {
             navigationItem.title = item.name
         }
     }
+    
+    var imageStore: ImageStore!
+    
+    @IBAction func takePicture(sender: AnyObject) {
+        
+        let imagePicker = UIImagePickerController()
+        
+        //If the device has a camera, take a picture, otherwise
+        //Just pick from photo library
+        
+        if UIImagePickerController.isSourceTypeAvailable(.Camera)
+        {
+            imagePicker.sourceType = .Camera
+        }
+        else
+        {
+            imagePicker.sourceType = .PhotoLibrary
+        }
+        imagePicker.delegate = self
+        presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+
+        //Get picked image from info directory
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        
+        //Store the image in the ImageStore for the item's key
+        imageStore.setImage(image, forKey: item.itemKey)
+        
+        //Put that image on the screen in the image view
+        imageView.image = image
+        
+        //Take the image picker off the screen
+        //You must dismiss method call
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    var newDate: NSDate!
+    var count=0
     
     let numberFormatter: NSNumberFormatter = {
         let formatter = NSNumberFormatter()
@@ -52,7 +95,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         //"Save" changes to item
         item.name = nameField.text ?? ""
         item.serialNumber = serialNumberField.text
-            
+        
+        
+        
         if let valueText = valueField.text,
             value = numberFormatter.numberFromString(valueText) {
                 item.valueInDollars = value.integerValue
@@ -64,14 +109,29 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
         nameField.text = item.name
         serialNumberField.text = item.serialNumber
         //valueField.text = "\(item.valueInDollars)"
         //dateLabel.text = "\(item.dateCreated)"
         valueField.text = numberFormatter.stringFromNumber(item.valueInDollars)
         dateLabel.text = dateFormatter.stringFromDate(item.dateCreated)
+        
+        //Get the item key
+        let key = item.itemKey
+        
+        //if there is an associated image with the item
+        //Display it within the image view
+        let imageToDisplay = imageStore.imageforKey(key)
+        imageView.image = imageToDisplay
     }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "ChangeDate" {
+                let dateViewController = segue.destinationViewController as! ChangeDate
+                dateViewController.changeDateValue = item.dateCreated
+            }
+        }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
