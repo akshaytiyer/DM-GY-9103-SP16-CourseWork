@@ -48,9 +48,15 @@ class DetailViewController: UIViewController, UITextFieldDelegate, UINavigationC
         //If the device has a camera, take a picture, otherwise
         //Just pick from photo library
         
+        // Create a crosshair view centered on imagePicker view
+        let crossHairPNG = "crosshair.png"
+        let imageCrossHair = UIImage(named: crossHairPNG)
+        let crossHairImageView = UIImageView(image: imageCrossHair)
+        crossHairImageView.center = imagePicker.view.center
         if UIImagePickerController.isSourceTypeAvailable(.Camera)
         {
             imagePicker.sourceType = .Camera
+            imagePicker.cameraOverlayView = crossHairImageView
         }
         else
         {
