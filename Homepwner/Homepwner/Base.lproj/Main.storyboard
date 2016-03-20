@@ -199,6 +199,11 @@
                                             <action selector="takePicture:" destination="QMT-f7-eLG" id="Jrc-bf-nhJ"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem title="Delete" id="xWH-Z6-dda">
+                                        <connections>
+                                            <action selector="removePicture:" destination="QMT-f7-eLG" id="W7t-Gs-QQ2"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>

@@ -29,6 +29,18 @@ class DetailViewController: UIViewController, UITextFieldDelegate, UINavigationC
     
     var imageStore: ImageStore!
     
+    @IBAction func removePicture(sender: AnyObject) {
+        
+        //Get the item key
+        let key = item.itemKey
+        
+        //Delete Item from Cache for that Image
+        imageStore.deleteImageforKey(key)
+        
+        //Set the image view to nil
+        imageView.image = nil
+        
+    }
     @IBAction func takePicture(sender: AnyObject) {
         
         let imagePicker = UIImagePickerController()
