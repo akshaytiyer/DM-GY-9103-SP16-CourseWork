@@ -12,7 +12,7 @@ class Item: NSObject, NSCoding {
     var name: String
     var valueInDollars: Int
     var serialNumber: String?
-    let dateCreated: NSDate
+    var dateCreated: NSDate
     let itemKey: String
     
     init(name: String, serialNumber: String?, valueInDollars: Int) {
