@@ -8,10 +8,20 @@
 
 import UIKit
 
-class DrawView: UIView {
+class DrawView: UIView, UIGestureRecognizerDelegate {
     
     var currentLines = [NSValue:Line]()
     var finishedLine = [Line]()
+    var moveRecogniser: UIPanGestureRecognizer!
+    var selectedLineIndex: Int?
+    {
+        didSet {
+            if selectedLineIndex == nil {
+                let menu = UIMenuController.sharedMenuController()
+                menu.setMenuVisible(false, animated: true)
+            }
+        }
+    }
     
     
     //Current Ellipses Directory
@@ -19,7 +29,134 @@ class DrawView: UIView {
     var currentEllipses = [Line]()
     var finishedEllipses = [Line]()
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        let doubleTapRecogniser = UITapGestureRecognizer(target: self, action: #selector(DrawView.doubleTap(_:)))
+        doubleTapRecogniser.numberOfTapsRequired = 2
+        addGestureRecognizer(doubleTapRecogniser)
+        doubleTapRecogniser.delaysTouchesBegan = true
+        
+        let tapRecogniser = UITapGestureRecognizer(target: self, action: #selector(DrawView.tap(_:)))
+        tapRecogniser.delaysTouchesBegan = true
+        tapRecogniser.requireGestureRecognizerToFail(doubleTapRecogniser)
+        addGestureRecognizer(tapRecogniser)
+        
+        let longPressRecogniser = UILongPressGestureRecognizer(target: self, action: #selector(DrawView.longPress(_:)))
+        addGestureRecognizer(longPressRecogniser)
+        
+        moveRecogniser = UIPanGestureRecognizer(target: self, action: #selector(DrawView.moveLine(_:)))
+        moveRecogniser.cancelsTouchesInView = false
+        moveRecogniser.delegate = self
+        moveRecogniser.cancelsTouchesInView = false
+        addGestureRecognizer(moveRecogniser)
+    }
     
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    func moveLine(gestureRecogniser: UIPanGestureRecognizer)
+    {
+        print("Recognized a Pan")
+        
+        //If a Line is Selected
+        if let index = selectedLineIndex {
+            //When a pan recogniser changes its position
+            if gestureRecogniser.state == .Changed {
+                //How far has the pan moved
+                let translation = gestureRecogniser.translationInView(self)
+                
+                //Add the translation to the current beginning and end points of the line
+                //Make sure there are no copy and paster typos!
+                finishedLine[index].begin.x += translation.x
+                finishedLine[index].begin.y += translation.y
+                finishedLine[index].end.x += translation.x
+                finishedLine[index].end.y += translation.y
+                
+                gestureRecogniser.setTranslation(CGPoint.zero, inView: self)
+                
+                //Redraw the screen
+                setNeedsDisplay()
+            }
+        }
+        else {
+            //If no line is selected then do not do anything
+        }
+    }
+    
+    func longPress(gestureRecogniser: UIGestureRecognizer)
+    {
+        print("Recognised a Long Press")
+        
+        if gestureRecogniser.state == .Began {
+            let point = gestureRecogniser.locationInView(self)
+            selectedLineIndex = indexOfLineAtPoint(point)
+            
+            if selectedLineIndex != nil {
+                currentLines.removeAll(keepCapacity: false)
+            }
+        }
+        else if gestureRecogniser.state == .Ended {
+            selectedLineIndex = nil
+        }
+        setNeedsDisplay()
+    }
+    
+    func tap(gestureRecogniser: UIGestureRecognizer)
+    {
+        print("Recognised tap")
+        let point = gestureRecogniser.locationInView(self)
+        selectedLineIndex = indexOfLineAtPoint(point)
+        
+        //Grab a menu controller
+        let menu = UIMenuController.sharedMenuController()
+        
+        if selectedLineIndex != nil {
+            
+            //Make drawView the target of menu item action messages
+            becomeFirstResponder()
+            
+            //Create a new item "Delete" UIMenuItem
+            let deleteItem = UIMenuItem(title: "Delete", action: #selector(DrawView.deleteLine(_:)))
+            menu.menuItems = [deleteItem]
+            
+            //Tell the menu where it should come from and then show it
+            menu.setTargetRect(CGRect(x: point.x, y: point.y, width: 2, height: 2), inView: self)
+            menu.setMenuVisible(true, animated: true)
+        }
+        else {
+            //Hide the menu if no line is selected
+            menu.setMenuVisible(false, animated: true)
+        }
+        
+        setNeedsDisplay()
+    }
+    
+    override func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    func deleteLine(sender: AnyObject) {
+        //Remove the selected line from the list of finished lines
+        if let index = selectedLineIndex {
+            finishedLine.removeAtIndex(index)
+            selectedLineIndex = nil
+            
+            //redraw everything
+            setNeedsDisplay()
+        }
+    }
+    
+    
+    func doubleTap(gestureRecogniser: UIGestureRecognizer)
+    {
+        print("Recognise a double tap")
+        selectedLineIndex = nil
+        currentLines.removeAll(keepCapacity: false)
+        finishedLine.removeAll(keepCapacity: false)
+        setNeedsDisplay()
+    }
     
     @IBInspectable var finishedLineColor: UIColor = UIColor.blackColor() {
         didSet {
@@ -108,6 +245,33 @@ class DrawView: UIView {
         }
         //In Progress End
         
+        if let index = selectedLineIndex {
+            UIColor.greenColor().setStroke()
+            let selectedLine = finishedLine[index]
+            strokeLine(selectedLine)
+        }
+    }
+    
+    func indexOfLineAtPoint(point: CGPoint) -> Int? {
+        //Find a line close to the point
+        for(index, line) in finishedLine.enumerate() {
+            let begin = line.begin
+            let end = line.end
+            
+            //Check a few points on the line
+            for t in CGFloat(0).stride(to: 1.0, by: 0.05) {
+                let x = begin.x + ((end.x - begin.x) * t)
+                let y = begin.y + ((end.y - begin.y) * t)
+                
+                //If the tapped point is withing 20 points, let's return the line
+                if hypot(x - point.x, y - point.y) < 20.0 {
+                    return index
+                }
+            }
+            
+        }
+        //if nothing is close to the tapped point, then we did not select a line
+        return nil
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
